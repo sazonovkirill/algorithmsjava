@@ -60,6 +60,25 @@ public class Vertex {
         return result;
     }
 
+    public List<Vertex> getAdjacentVertices() {
+        List<Vertex> result = new ArrayList<>();
+
+        for (Edge edge : edges) {
+            edge.getAnotherVertex(this);
+        }
+
+        return result;
+    }
+
+    public Edge isConnectedTo(Vertex anotherVertex) {
+        for (Edge edge : edges) {
+            if (edge.getAnotherVertex(this).equals(anotherVertex)) {
+                return edge;
+            }
+        }
+        return null;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
