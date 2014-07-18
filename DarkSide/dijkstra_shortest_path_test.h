@@ -1,0 +1,6 @@
+#ifndef DIJKSTRA_SHORTEST_PATH_TEST_H
+#define DIJKSTRA_SHORTEST_PATH_TEST_H
+
+int test_graph_creation();
+
+#endif // DIJKSTRA_SHORTEST_PATH_TEST_H

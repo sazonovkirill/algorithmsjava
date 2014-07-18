@@ -2,7 +2,6 @@ package ru.sazonovkirill.algorithms.graphs;
 
 import ru.sazonovkirill.algorithms.graphs.domain.Edge;
 import ru.sazonovkirill.algorithms.graphs.domain.Graph;
-import ru.sazonovkirill.algorithms.graphs.domain.Vertex;
 
 import java.util.*;
 
@@ -14,45 +13,31 @@ public class FastPrimsMST {
     }
 
     public List<Edge> getMST() {
-        final Map<Vertex, Edge> minimumEdgesWeight = new HashMap<>();
-        final PriorityQueue<Vertex> vertices = new PriorityQueue<>(new Comparator<Vertex>() {
-            @Override
-            public int compare(Vertex v1, Vertex v2) {
-                Edge e1 = minimumEdgesWeight.get(v1);
-                Edge e2 = minimumEdgesWeight.get(v2);
-                Integer v1MinimumEdgeWeight = e1 != null ? minimumEdgesWeight.get(v1).getWeight() : Integer.MAX_VALUE;
-                Integer v2MinimumEdgeWeight = e2 != null ? minimumEdgesWeight.get(v2).getWeight() : Integer.MAX_VALUE;
-                return v1MinimumEdgeWeight.compareTo(v2MinimumEdgeWeight);
-            }
+        final Edge[] minimumEdgesWeight = new Edge[graph.getVerticesCount()];
+        final PriorityQueue<Integer> vertices = new PriorityQueue<>((v1, v2) -> {
+            Edge e1 = minimumEdgesWeight[v1];
+            Edge e2 = minimumEdgesWeight[v2];
+            Integer v1MinimumEdgeWeight = e1 != null ? e1.getWeight() : Integer.MAX_VALUE;
+            Integer v2MinimumEdgeWeight = e2 != null ? e2.getWeight() : Integer.MAX_VALUE;
+            return v1MinimumEdgeWeight.compareTo(v2MinimumEdgeWeight);
         });
 
-        Vertex sourceVertex = graph.getVertices().get(0);
-
-        for (Vertex vertex : graph.getVertices()) {
-            if (vertex.equals(sourceVertex)) continue;
-
-            Edge edge = sourceVertex.isConnectedTo(vertex);
-            if (edge != null) {
-                minimumEdgesWeight.put(vertex, edge);
-            } else {
-                minimumEdgesWeight.put(vertex, null);
-            }
-            vertices.add(vertex);
-        }
+        vertices.add(0);
 
         List<Edge> mst = new LinkedList<>();
-
         while (vertices.size() > 0) {
-            Vertex nextVertex = vertices.poll();
-            Edge nextEdge = minimumEdgesWeight.get(nextVertex);
-
+            int nextVertex = vertices.poll();
+            Edge nextEdge = minimumEdgesWeight[nextVertex];
             mst.add(nextEdge);
 
-            for (Vertex vertex : nextVertex.getAdjacentVertices()) {
-                Edge edge = nextVertex.isConnectedTo(vertex);
-                if (edge.getWeight() < minimumEdgesWeight.get(vertex).getWeight()) {
-                    minimumEdgesWeight.put(vertex, edge);
+            for (Edge edge : graph.getEdges(nextVertex)) {
+                int anotherVertex = edge.getAnotherVertex(nextVertex);
+
+                if ((minimumEdgesWeight[anotherVertex] == null) || (
+                    (minimumEdgesWeight[anotherVertex] != null) && (edge.getWeight() < minimumEdgesWeight[anotherVertex].getWeight()))) {
+                    minimumEdgesWeight[anotherVertex] = edge;
                 }
+                vertices.add(anotherVertex);
             }
         }
 

@@ -2,57 +2,58 @@ package ru.sazonovkirill.algorithms.graphs;
 
 import ru.sazonovkirill.algorithms.graphs.domain.Edge;
 import ru.sazonovkirill.algorithms.graphs.domain.Graph;
-import ru.sazonovkirill.algorithms.graphs.domain.Vertex;
 
 import java.util.*;
 
 public class DijkstraShortestPath {
     private final Graph graph;
+    private final int[] distances;
+    private final int[] parents;
 
     public DijkstraShortestPath(Graph graph) {
         this.graph = graph;
+        this.distances = new int[graph.getVerticesCount()];
+        this.parents = new int[graph.getVerticesCount()];
     }
 
-    private final Map<Vertex, Integer> distances = new HashMap<>();
-    private final Map<Vertex, Integer> parents = new HashMap<>();
-
-    private final Set<Vertex> unexplored = new HashSet<>();
-    private final PriorityQueue<Edge> edges = new PriorityQueue<>(new Comparator<Edge>() {
-        @Override
-        public int compare(Edge e1, Edge e2) {
-            return new Integer(e1.getWeight()).compareTo(e2.getWeight());
+    public int getShortestPathValue(int source, int dest) {
+        for (int i = 0; i < graph.getVerticesCount(); i++) {
+            distances[i] = Integer.MAX_VALUE;
+            parents[i] = -1;
         }
-    });
 
-    public int getShortestPathValue(String sourceId, String destId) {
-        distances.clear();
-        parents.clear();
-        unexplored.clear();
-        edges.clear();
+        final PriorityQueue<Integer> vertices = new PriorityQueue<>((v1, v2) -> {
+            Integer v1Score = distances[v1];
+            Integer v2Score = distances[v2];
+            return v1Score.compareTo(v2Score);
+        });
 
-        Vertex sourceVertex = graph.getVertexById(sourceId);
-        distances.put(sourceVertex, 0);
-        parents.put(sourceVertex, null);
+        for (int i = 0; i < graph.getVerticesCount(); i++) {
+            vertices.add(i);
+        }
 
-        unexplored.addAll(graph.getVertices());
-        unexplored.remove(sourceVertex);
+        distances[source] = 0;
+        vertices.remove(source);
+        vertices.add(source);
 
-        edges.addAll(sourceVertex.getOutgoingEdges());
+        final Set<Integer> explored = new HashSet<>();
+        while (explored.size() < graph.getVertices().size()) {
+            int vertex = vertices.poll();
+            explored.add(vertex);
 
-        while (unexplored.size() > 0) {
-            Edge edge = edges.poll();
-            Vertex x = edge.getX();
-            Vertex y = edge.getY();
+            for (Edge outgoingEdge : graph.getEdges(vertex)) {
+                int anotherVertex = outgoingEdge.getAnotherVertex(vertex);
 
-            if (!distances.containsKey(y) || distances.get(y) > (distances.get(x) + edge.getWeight())) {
-                distances.put(y, distances.get(x) + edge.getWeight());
+                if (distances[vertex] + outgoingEdge.getWeight() < distances[anotherVertex]) {
+                    distances[anotherVertex] =  distances[vertex] + outgoingEdge.getWeight();
+
+                    vertices.remove(anotherVertex);
+                    vertices.add(anotherVertex);
+                }
             }
 
-            unexplored.remove(y);
-            edges.addAll(y.getOutgoingEdges());
         }
 
-
-        return distances.get(graph.getVertexById(destId));
+        return distances[dest];
     }
 }

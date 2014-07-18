@@ -1,40 +1,25 @@
 #include <QCoreApplication>
-
 #include <iostream>
 
-#include "binarytreenode.h"
+#include "directed_weighted_graph.h"
 
-int test_bynaryTreeNode() {
-    QString name = "name";
-    BinaryTreeNode node(1, name);
-    name = "name2";
-    std::cout << "value: " << node.getValue().toStdString() << std::endl;
-    return 0;
-}
-
-void printValue(Value *value) {
-    std::cout << value->toStdString() << std::endl;
-}
-
-int test_traversals() {\
-    BinaryTreeNode *root = new BinaryTreeNode(1, "1",
-        new BinaryTreeNode(2, "2",
-              new BinaryTreeNode(3, "3"), NULL),
-        new BinaryTreeNode(4, "4",
-              new BinaryTreeNode(5, "5"),
-              new BinaryTreeNode(6, "6")));
-
-    std::cout << "Height: " << QString::number(root->getHeight()).toStdString() << std::endl;
-
-    std::cout << "Test preorder" << std::endl;
-    root->preorderTraverse(printValue);
-    return 0;
-}
+//int test_graph_creation() {
+//    DirectedWeightedGraph graph(4);
+//    graph.connect1(0, 1, 2);
+//    graph.connect1(1, 2, 2);
+//    graph.connect1(2, 3, 2);
+//    graph.connect1(0, 3, 5);
+//    graph.print_graph1();
+//    return 0;
+//}
 
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
-    test_traversals();
+    DirectedWeightedGraph *graph = new DirectedWeightedGraph(2);
+    graph->print_graph();
+    graph->connect(1, 1, 1);
+
     return a.exec();
 }

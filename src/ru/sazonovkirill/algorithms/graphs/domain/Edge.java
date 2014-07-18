@@ -4,37 +4,37 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Edge {
-    private static final String WEIGHT_ATTRIBUTE = "__weight";
-
-    private final Vertex x;
-    private final Vertex y;
+    private final int x;
+    private final int y;
 
     private final boolean isDirected;
+    private int weight = 1;
 
     private Object value;
-    private final Map<String, Object> attributes = new HashMap<String, Object>();
 
-    private Edge(Vertex x, Vertex y, boolean isDirected) {
-        if (x.equals(y)) throw new IllegalArgumentException();
+    public Edge(int x, int y, int weight, boolean isDirected) {
+        if(x == y) throw new IllegalArgumentException();
 
         this.x = x;
         this.y = y;
+        this.weight = weight;
         this.isDirected = isDirected;
     }
 
-    public static Edge directedEdge(Vertex from, Vertex to) {
-        return new Edge(from, to, true);
+    public Edge(int x, int y, boolean isDirected) {
+        if(x == y) throw new IllegalArgumentException();
+
+        this.x = x;
+        this.y = y;
+        this.weight = weight;
+        this.isDirected = isDirected;
     }
 
-    public static Edge undirected(Vertex x, Vertex y) {
-        return new Edge(x, y, false);
-    }
-
-    public Vertex getX() {
+    public int getX() {
         return x;
     }
 
-    public Vertex getY() {
+    public int getY() {
         return y;
     }
 
@@ -50,25 +50,17 @@ public class Edge {
         this.value = value;
     }
 
-    public void setAttribute(String key, Object value) {
-        attributes.put(key, value);
-    }
-
-    public Object getAttribute(String key) {
-        return attributes.get(key);
-    }
-
     public int getWeight() {
-        return (int) getAttribute(WEIGHT_ATTRIBUTE);
+        return weight;
     }
 
     public void setWeight(int weight) {
-        setAttribute(WEIGHT_ATTRIBUTE, weight);
+        this.weight = weight;
     }
 
-    public Vertex getAnotherVertex(Vertex v) {
-        if (x.equals(v)) return y;
-        else if (y.equals(v)) return x;
+    public Integer getAnotherVertex(int v) {
+        if (x == v) return y;
+        else if (y == v) return x;
         else return null;
     }
 
@@ -79,28 +71,25 @@ public class Edge {
 
         Edge edge = (Edge) o;
 
-        if (isDirected != edge.isDirected) return false;
-        if (!x.equals(edge.x)) return false;
-        if (!y.equals(edge.y)) return false;
+        if (x != edge.x) return false;
+        if (y != edge.y) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result = x.hashCode();
-        result = 31 * result + y.hashCode();
-        result = 31 * result + (isDirected ? 1 : 0);
+        int result = x;
+        result = 31 * result + y;
         return result;
     }
 
     @Override
     public String toString() {
         if (isDirected) {
-            return "(" + x + "->" + y + ")";
+            return "(" + x + "-|" + weight + "|>" + y + ")";
         } else {
-            return "(" + x + "-" + y + ")";
+            return "(" + x + "-|" + weight + "|-" + y + ")";
         }
-
     }
 }

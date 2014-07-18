@@ -1,44 +1,65 @@
 package ru.sazonovkirill.algorithms.graphs.domain;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Graph {
-    private final List<Vertex> vertices;
-    private final List<Edge> edges;
+    private final Vertex[] vertices;
+    private final List<Edge> edges = new ArrayList<>();
 
-    public Graph(List<Vertex> vertices, List<Edge> edges) {
-        this.vertices = vertices;
-        this.edges = edges;
+    public Graph(int verticesCount) {
+        vertices = new Vertex[verticesCount];
     }
 
-    public Vertex getVertexById(String vertexId) {
-        for (Vertex vertex : vertices) {
-            if (vertex.getId().equals(vertexId)) {
-                return vertex;
+    public Vertex getVertex(int vertex) {
+        if (vertex < 0 || vertex >= vertices.length) throw new IllegalArgumentException();
+        return vertices[vertex];
+    }
+
+    public void addEdge(Edge edge) {
+        if (edge == null) throw new IllegalArgumentException();
+
+        if (edge.getX() < 0 || edge.getX() >= vertices.length ||
+            edge.getY() < 0 || edge.getY() >= vertices.length) {
+            throw new IllegalArgumentException("Wrong edge parameters");
+        }
+
+        for (Edge e : edges) {
+            if (e.equals(edge)) {
+                throw new IllegalArgumentException("Edge with such parameters already exists");
             }
         }
 
-        return null;
+        edges.add(edge);
+
+        if (edge.isDirected()) {
+            vertices[edge.getX()].getEdges().add(edge);
+        } else {
+            vertices[edge.getX()].getEdges().add(edge);
+            vertices[edge.getY()].getEdges().add(edge);
+        }
     }
 
-    public List<String> getVerticesIds() {
-        List<String> result = new ArrayList<String>();
+    public void connectDirected(int x, int y, int weight) {
+        addEdge(new Edge(x, y, weight, true));
+    }
 
-        for (Vertex vertex : vertices) {
-            result.add(vertex.getId());
-        }
-
-        return result;
+    public void connectUnDirected(int x, int y, int weight) {
+        addEdge(new Edge(x, y, weight, false));
     }
 
     public List<Vertex> getVertices() {
-        return vertices;
+        return Arrays.asList(vertices);
     }
 
     public List<Edge> getEdges() {
         return edges;
+    }
+
+    public List<Edge> getEdges(int vertex) {
+        return vertices[vertex].getEdges();
+    }
+
+    public int getVerticesCount() {
+        return vertices.length;
     }
 }

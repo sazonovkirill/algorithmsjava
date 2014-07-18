@@ -5,26 +5,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Vertex {
-    private final String id;
+class Vertex {
+    private final int id;
     private Object value;
 
     private final List<Edge> edges = new ArrayList<Edge>();
 
-    private final Map<String, Object> attributes = new HashMap<String, Object>();
-
-    public Vertex(String id) {
+    public Vertex(int id) {
         this.id = id;
     }
 
-    public Vertex(String id, Object value) {
-        if (id == null) throw new IllegalArgumentException();
-
+    public Vertex(int id, Object value) {
         this.id = id;
         this.value = value;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
@@ -36,35 +32,15 @@ public class Vertex {
         this.value = value;
     }
 
-    public void setAttribute(String key, Object value) {
-        attributes.put(key, value);
-    }
-
-    public Object getAttribute(String key) {
-        return attributes.get(key);
-    }
-
     public List<Edge> getEdges() {
         return edges;
-    }
-
-    public List<Edge> getOutgoingEdges() {
-        List<Edge> result = new ArrayList<>();
-
-        for (Edge edge : edges) {
-            if (edge.getX().equals(this)) {
-                result.add(edge);
-            }
-        }
-
-        return result;
     }
 
     public List<Vertex> getAdjacentVertices() {
         List<Vertex> result = new ArrayList<>();
 
         for (Edge edge : edges) {
-            edge.getAnotherVertex(this);
+            edge.getAnotherVertex(id);
         }
 
         return result;
@@ -72,7 +48,7 @@ public class Vertex {
 
     public Edge isConnectedTo(Vertex anotherVertex) {
         for (Edge edge : edges) {
-            if (edge.getAnotherVertex(this).equals(anotherVertex)) {
+            if (edge.getAnotherVertex(id) == anotherVertex.id) {
                 return edge;
             }
         }
@@ -86,14 +62,14 @@ public class Vertex {
 
         Vertex vertex = (Vertex) o;
 
-        if (!id.equals(vertex.id)) return false;
+        if (id != vertex.id) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return id;
     }
 
     @Override
