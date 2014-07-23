@@ -18,7 +18,8 @@ TEMPLATE = app
 SOURCES += main.cpp \
     binarytreenode.cpp \
     directed_weighted_graph.cpp \
-    dijkstra_shortest_path_test.cpp
+    dijkstra_shortest_path_test.cpp \
+    dijkstra_shortest_path.cpp
 
 HEADERS += \
     binarytreenode.h \

@@ -49,7 +49,7 @@ public:
 
     void print_graph();
 
-    int vertices_count() const { return (int)_edges.size(); }
+    int vertices_count() const { return (int)_vertices.size(); }
 private:
     std::vector<std::vector<Edge *> > _vertices;
     std::vector<Edge *> _edges;
