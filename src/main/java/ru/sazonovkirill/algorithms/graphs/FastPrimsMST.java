@@ -14,6 +14,7 @@ public class FastPrimsMST {
 
     public List<Edge> getMST() {
         final Edge[] minimumEdgesWeight = new Edge[graph.getVerticesCount()];
+        final Set<Integer> visited = new HashSet<>();
         final PriorityQueue<Integer> vertices = new PriorityQueue<>((v1, v2) -> {
             Edge e1 = minimumEdgesWeight[v1];
             Edge e2 = minimumEdgesWeight[v2];
@@ -25,19 +26,26 @@ public class FastPrimsMST {
         vertices.add(0);
 
         List<Edge> mst = new LinkedList<>();
-        while (vertices.size() > 0) {
+        while (visited.size() < graph.getVerticesCount()) {
             int nextVertex = vertices.poll();
-            Edge nextEdge = minimumEdgesWeight[nextVertex];
-            mst.add(nextEdge);
+            if (nextVertex != 0) {
+                Edge nextEdge = minimumEdgesWeight[nextVertex];
+                mst.add(nextEdge);
+            }
+
+            visited.add(nextVertex);
 
             for (Edge edge : graph.getEdges(nextVertex)) {
                 int anotherVertex = edge.getAnotherVertex(nextVertex);
+                if (!visited.contains(anotherVertex)) {
+                    if ((minimumEdgesWeight[anotherVertex] == null) || (
+                        (minimumEdgesWeight[anotherVertex] != null) && (edge.getWeight() < minimumEdgesWeight[anotherVertex].getWeight()))) {
+                        minimumEdgesWeight[anotherVertex] = edge;
 
-                if ((minimumEdgesWeight[anotherVertex] == null) || (
-                    (minimumEdgesWeight[anotherVertex] != null) && (edge.getWeight() < minimumEdgesWeight[anotherVertex].getWeight()))) {
-                    minimumEdgesWeight[anotherVertex] = edge;
+                        vertices.remove(anotherVertex);
+                        vertices.add(anotherVertex);
+                    }
                 }
-                vertices.add(anotherVertex);
             }
         }
 

@@ -183,6 +183,7 @@ public class BinaryTreeNode<K extends Comparable<K>, V> {
             } else {
                 node.getRight().left = successor.getRight();
                 successor.right = node.getRight();
+                successor.left = node.getLeft();
                 if (parent.getLeft().getKey().equals(key)) {
                     parent.left = successor;
                 } else {
