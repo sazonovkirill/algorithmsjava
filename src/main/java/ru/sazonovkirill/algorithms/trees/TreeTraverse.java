@@ -30,16 +30,16 @@ public class TreeTraverse<K extends Comparable<K>, V> {
     private void inorder(BinaryTreeNode<K, V> node, IBinaryTreeNodeVisiter<K, V> visiter) {
         if (node == null) return;
 
-        preorder(node.getLeft(), visiter);
+        inorder(node.getLeft(), visiter);
         visiter.visit(node);
-        preorder(node.getRight(), visiter);
+        inorder(node.getRight(), visiter);
     }
 
     private void postorder(BinaryTreeNode<K, V> node, IBinaryTreeNodeVisiter<K, V> visiter) {
         if (node == null) return;
 
-        preorder(node.getLeft(), visiter);
-        preorder(node.getRight(), visiter);
+        postorder(node.getLeft(), visiter);
+        postorder(node.getRight(), visiter);
         visiter.visit(node);
     }
 }
