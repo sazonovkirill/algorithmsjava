@@ -5,7 +5,7 @@ import ru.sazonovkirill.algorithms.graphs.domain.Graph;
 
 import java.util.*;
 
-public class DijkstraShortestPath {
+public class DijkstraShortestPath implements SingleSourceShortestPath {
     private final Graph graph;
     private final int[] distances;
     private final int[] parents;

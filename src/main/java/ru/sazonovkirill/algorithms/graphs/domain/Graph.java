@@ -42,6 +42,26 @@ public class Graph {
         }
     }
 
+    public List<Edge> getEdgesFrom(int vertex) {
+        List<Edge> result = new ArrayList<>();
+        for (Edge edge : edges) {
+            if (edge.getX() == vertex) {
+                result.add(edge);
+            }
+        }
+        return result;
+    }
+
+    public List<Edge> getEdgesTo(int vertex) {
+        List<Edge> result = new ArrayList<>();
+        for (Edge edge : edges) {
+            if (edge.getY() == vertex) {
+                result.add(edge);
+            }
+        }
+        return result;
+    }
+
     public void connectDirected(int x, int y, int weight) {
         addEdge(new Edge(x, y, weight, true));
     }
