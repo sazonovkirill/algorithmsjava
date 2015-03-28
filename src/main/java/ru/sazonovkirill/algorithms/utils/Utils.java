@@ -24,6 +24,10 @@ public class Utils {
 
     public static void print(int[] arr) {
         System.out.println("(" + StringUtils.join(arr, ',') + ")");
+    }
 
+    public static int min(int x, int y) {
+        if (x <= y) return x;
+        else return y;
     }
 }
